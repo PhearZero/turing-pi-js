@@ -1,0 +1,28 @@
+{
+  "name": "turing-pi-js",
+  "version": "1.0.0",
+  "description": "Fetch library for Turing Pi 2 BMC API",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PhearZero/turing-pi-js.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PhearZero/turing-pi-js/issues"
+  },
+  "homepage": "https://github.com/PhearZero/turing-pi-js#readme",
+  "devDependencies": {
+    "@types/isomorphic-fetch": "^0.0.36",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "isomorphic-fetch": "^3.0.0"
+  }
+}
