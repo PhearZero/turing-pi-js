@@ -148,7 +148,9 @@ export const tpi = (url: URL): TuringPiInterface => {
 
             // Set params
             Object.keys(query).forEach((k) => {
-                params.set(k, query[k].toString())
+                if(k !== 'file'){
+                    params.set(k, query[k].toString())
+                }
             })
 
             // Fetch
