@@ -1,10 +1,18 @@
 import fetch from 'isomorphic-fetch'
 
-type GetterType = "nodeinfo" | "usb" | "power" | "other" | "sdcard"
-type SetterType = "usb" | "power" | "firmware" | "network"
+type GetterType = "nodeinfo" | "usb" | "power" | "other" | "sdcard" | "uart"
+type SetterType = "usb" | "power" | "firmware" | "network" | "uart"
 type OnOff = 0 | 1
 type NodeIndex = 0 | 1 | 2 | 3
 
+
+interface UART {
+    uart: string
+}
+
+interface UARTResponse{
+    response: UART[]
+}
 interface Other {
     version: string
     buildtime: string
@@ -57,7 +65,7 @@ interface NodeInfoResponse {
     response: NodeInfo[]
 }
 
-type GetResponse = Promise<NodeInfoResponse | NodePowerResponse | SDCardResponse | USBResponse | OtherResponse>
+type GetResponse = Promise<NodeInfoResponse | NodePowerResponse | SDCardResponse | USBResponse | OtherResponse | UARTResponse>
 
 interface USBQuery {
     [k: string]: OnOff | NodeIndex
@@ -84,7 +92,18 @@ interface FirmwareQuery {
     file: File
 }
 
-type Query = USBQuery | PowerQuery | NetworkQuery | FirmwareQuery
+interface UARTQuery {
+    [k: string]: NodeIndex | string
+    node: NodeIndex,
+    cmd: string,
+}
+
+interface UARTGetQuery {
+    [k: string]: NodeIndex
+    node: NodeIndex
+}
+
+type Query = USBQuery | PowerQuery | NetworkQuery | FirmwareQuery | UARTQuery
 
 interface OkResult {
     result: "ok"
@@ -97,7 +116,7 @@ interface OkResponse {
 type SetResponse = Promise<OkResponse>
 
 interface TuringPiInterface {
-    get(type: GetterType, options?: RequestInit): GetResponse
+    get(type: GetterType,  query?: UARTGetQuery, options?: RequestInit): GetResponse
     set(type: SetterType, query: Query, options?: RequestInit): SetResponse
 }
 
@@ -110,16 +129,23 @@ export const tpi = (url: URL): TuringPiInterface => {
         /**
          * Get State from the BMC
          * @param type
-         * @param options
+         * @param [query]
+         * @param [options]
          */
         async get(
             type: GetterType,
-            options?: RequestInit
+            query?: UARTGetQuery, // Only UART has extra parameters, might change in the future
+            options?: RequestInit,
         ): GetResponse {
             // Set Params
             const params = new URLSearchParams();
             params.set('opt', 'get')
             params.set('type', type)
+            if(typeof query !== 'undefined'){
+                Object.keys(query).forEach((k)=>{
+                    params.set(k, query[k].toString())
+                })
+            }
             // Fetch
             return fetch(`${url}?${params}`, options)
                 .then(r => r.json())
