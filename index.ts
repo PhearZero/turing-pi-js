@@ -6,75 +6,75 @@ type OnOff = 0 | 1
 type NodeIndex = 0 | 1 | 2 | 3
 
 
-interface UART {
+export interface UART {
     uart: string
 }
 
-interface UARTResponse{
+export interface UARTResponse{
     response: UART[]
 }
-interface Other {
+export interface Other {
     version: string
     buildtime: string
     ip: string
     mac: string
 }
 
-interface OtherResponse {
+export interface OtherResponse {
     response: Other[]
 }
 
-interface USB {
+export interface USB {
     mode: OnOff
     node: NodeIndex
 }
 
-interface USBResponse {
+export interface USBResponse {
     response: USB[]
 }
 
-interface SDCard {
+export interface SDCard {
     total: number
     free: number
     use: number
 }
 
-interface SDCardResponse {
+export interface SDCardResponse {
     response: SDCard[]
 }
 
-interface NodePower {
+export interface NodePower {
     node1: OnOff
     node2: OnOff
     node3: OnOff
     node4: OnOff
 }
 
-interface NodePowerResponse {
+export interface NodePowerResponse {
     response: NodePower[]
 }
 
-interface NodeInfo {
+export interface NodeInfo {
     node1: string
     node2: string
     node3: string
     node4: string
 }
 
-interface NodeInfoResponse {
+export interface NodeInfoResponse {
     response: NodeInfo[]
 }
 
-type GetResponse = Promise<NodeInfoResponse | NodePowerResponse | SDCardResponse | USBResponse | OtherResponse | UARTResponse>
+export type GetResponse = Promise<NodeInfoResponse | NodePowerResponse | SDCardResponse | USBResponse | OtherResponse | UARTResponse>
 
-interface USBQuery {
+export interface USBQuery {
     [k: string]: OnOff | NodeIndex
 
     mode: OnOff,
     node: NodeIndex,
 }
 
-interface PowerQuery {
+export interface PowerQuery {
     [k: string]: OnOff
     node1: OnOff
     node2: OnOff
@@ -82,40 +82,40 @@ interface PowerQuery {
     node4: OnOff
 }
 
-interface NetworkQuery {
+export interface NetworkQuery {
     [k: string]: "reset"
     cmd: "reset"
 }
 
-interface FirmwareQuery {
+export interface FirmwareQuery {
     [k: string]: File
     file: File
 }
 
-interface UARTQuery {
+export interface UARTQuery {
     [k: string]: NodeIndex | string
     node: NodeIndex,
     cmd: string,
 }
 
-interface UARTGetQuery {
+export interface UARTGetQuery {
     [k: string]: NodeIndex
     node: NodeIndex
 }
 
-type Query = USBQuery | PowerQuery | NetworkQuery | FirmwareQuery | UARTQuery
+export type Query = USBQuery | PowerQuery | NetworkQuery | FirmwareQuery | UARTQuery
 
-interface OkResult {
+export interface OkResult {
     result: "ok"
 }
 
-interface OkResponse {
+export interface OkResponse {
     response: OkResult[]
 }
 
-type SetResponse = Promise<OkResponse>
+export type SetResponse = Promise<OkResponse>
 
-interface TuringPiInterface {
+export interface TuringPiInterface {
     get(type: GetterType,  query?: UARTGetQuery, options?: RequestInit): GetResponse
     set(type: SetterType, query: Query, options?: RequestInit): SetResponse
 }
